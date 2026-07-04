@@ -1,1 +1,36 @@
-<!DOCTYPE html> <html> <head><title>Tesla Login Redirect</title></head> <body> <p>Authenticating with Tesla App... You can close this window.</p> <script> // Fallback: If the app didn't catch the link, try a custom scheme const urlParams = new URLSearchParams(window.location.search); const code = urlParams.get('code'); if (code) { window.location.href = "tesla-app://oauth?code=" + code; } </script> </body> </html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tesla Login Redirect</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #111; color: white; text-align: center; }
+        .box { padding: 20px; }
+        .btn { display: inline-block; margin-top: 20px; padding: 15px 30px; background: #e82127; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h3>Connecting to App...</h3>
+        <p>You can close this window after you are redirected.</p>
+        <a id="manualLink" class="btn" href="#">Open Tesla Control App</a>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const state = urlParams.get('state');
+        
+        if (code) {
+            // This is the "magic link" that triggers the app directly
+            const deepLink = "tesla-app://oauth?code=" + code + (state ? "&state=" + state : "");
+            document.getElementById('manualLink').href = deepLink;
+            
+            // Try to redirect automatically
+            window.location.href = deepLink;
+        } else {
+            document.querySelector('h3').textContent = "No Code Found";
+        }
+    </script>
+</body>
+</html>
